@@ -1,3 +1,8 @@
+# About
+
+These scripts were created with the intention of running ROCKSTAR on
+the FLAMINGO simulations in COSMA.
+
 ### flamingo.cfg
 
 Simulation params
