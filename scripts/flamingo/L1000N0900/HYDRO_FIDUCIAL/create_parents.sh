@@ -1,10 +1,10 @@
-#TODO: Link this with sbatch script for running rockstar
-find_parents=/cosma/home/dp004/dc-mcgi1/flamingo/code/rockstar-swift/util/find_parents
-outbase="/snap8/scratch/dp004/dc-mcgi1/rockstar-flamingo/L1000N0900/HYDRO_FIDUCIAL"
-#TODO: Read this in
+find_parents=../../../util/find_parents
+
+outbase=/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar/
 box_size=681
 
-for snapshot in $(cat snapshot_names.txt); do
+for snapshot in $(cat ../snapshot_names.txt); do
+
     echo "Running for snapshot ${snapshot}"
     mkdir -p "${outbase}/merger_tree/snapshot_${snapshot}"
 
