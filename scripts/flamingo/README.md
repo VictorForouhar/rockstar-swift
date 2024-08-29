@@ -1,7 +1,7 @@
 # About
 
 These scripts were created with the intention of running ROCKSTAR on
-the FLAMINGO simulations in COSMA.
+the z = 0 FLAMINGO outputs in COSMA.
 
 ### flamingo.cfg
 
