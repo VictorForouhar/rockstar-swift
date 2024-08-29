@@ -20,13 +20,13 @@ if [ -f "${outbase}/auto-rockstar.cfg" ]; then
     exit
 fi
 
-ROCKSTAR_EXE=../../../../rockstar-galaxiess
+ROCKSTAR_EXE=../../../../rockstar-galaxies
 
 # Starting master process
 $ROCKSTAR_EXE -c flamingo.cfg &
 
 # If restarting use the following instead
-#$rockstar -c "${outbase}restart.cfg" &d
+#$rockstar -c "${outbase}restart.cfg" &
 
 # Wait until master process is running
 until [ -f "${outbase}/auto-rockstar.cfg" ]; do
