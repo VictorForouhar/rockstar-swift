@@ -2,7 +2,7 @@
 #
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=128
-#SBATCH --job-name ROCKSTAR_L1000N1800_HYDRO
+#SBATCH --job-name ROCKSTAR_L1000N0900_HYDRO
 #SBATCH --partition cosma8
 #SBATCH --output ./logs/%x.%j
 #SBATCH --account dp004
