@@ -1,4 +1,4 @@
-find_parents=../../../util/find_parents
+find_parents=../../../../util/find_parents
 
 outbase=/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar/
 box_size=681
