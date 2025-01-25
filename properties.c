@@ -415,6 +415,10 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
     }
   }
 
+  /* After the above loop, the total mass equals the total bound mass. Store.*/
+  if(bound)
+    h->bound_mass = total_mass;
+
   for (j=0; j<dens_tot; j++) {
     if (bound && (po[j].pe < po[j].ke)) continue;
     add_ang_mom(L, h->pos, po[j].pos, po[j].mass);

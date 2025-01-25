@@ -410,7 +410,7 @@ char *gen_merger_catalog(int64_t snap, int64_t chunk, struct halo *halos, int64_
     m = (BOUND_PROPS) ? th->mgrav : th->m;
     chars += snprintf(cur_pos, 1024, "%"PRId64" %"PRId64" %.4e %.2f %.2f %.3f %.3f %"PRId64" %.5f "
 		      "%.5f %.5f %.2f %.2f %.2f %.3e %.3e %.3e %.5f %.5f %.4e %.4e %.4e %.4e %.4e "
-		      "%.5f %.2f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.4f %.4e %.4e %d %.4e %.4e %.4e\n",
+		      "%.5f %.2f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.4f %.4e %.4e %d %.4e %.4e %.4e %.4e\n",
 	    th->id, th->desc, m, th->vmax, th->vrms, th->r, th->rs,
 	    th->num_p, th->pos[0], th->pos[1], th->pos[2], th->pos[3],
 	    th->pos[4], th->pos[5], th->J[0], th->J[1], th->J[2], th->spin,
@@ -419,7 +419,7 @@ char *gen_merger_catalog(int64_t snap, int64_t chunk, struct halo *halos, int64_
 	    th->c_to_a, th->A[0], th->A[1], th->A[2], th->b_to_a2, th->c_to_a2,
 		      th->A2[0], th->A2[1], th->A2[2], th->kin_to_pot, 
 		      th->m_pe_b, th->m_pe_d,
-		      (th->type == RTYPE_DM) ? 0 : 1, th->sm, th->gas, th->bh);
+		      (th->type == RTYPE_DM) ? 0 : 1, th->sm, th->gas, th->bh, th->bound_mass);
   }
   *cat_length = chars;
   *header_length = hchars;
