@@ -103,6 +103,7 @@ void rockstar(float *bounds, int64_t manual_subs) {
   if (bounds)
     for (i=0; i<num_bp; i++) bp[i].bgid += num_all_fofs - num_bfofs;
 
+  /* Here we iterate over single FoF groups (?). */
   if (!manual_subs) {
     for (i=0; i<num_all_fofs; i++)
       find_subs(all_fofs + i);

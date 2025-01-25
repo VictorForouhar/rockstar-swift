@@ -154,17 +154,39 @@ int dist_compare(const void *a, const void *b) {
 void _reset_potentials(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
   int64_t j, k;
   float dx, r2;
+
   memset(po + p_start, 0, sizeof(struct potential)*h->num_p);
-  for (j=0; j<h->num_p; j++) {
+
+  /* Copying of the particle data from a given subhalo into po */
+  for (j=0; j<h->num_p; j++) 
+  {
     r2 = 0;
-    for (k=0; k<3; k++) { dx=copies[h->p_start+j].pos[k] - cen[k]; r2+=dx*dx; }
+    for (k=0; k<3; k++) 
+    {
+      dx  = copies[h->p_start+j].pos[k] - cen[k]; 
+      r2 += dx * dx; 
+    }
+
+    /* Squared distance to the centre of the current halo. */
     po[p_start + j].r2 = r2;
+
+    /* 3D cartesian positions*/
     memcpy(po[p_start+j].pos, copies[h->p_start+j].pos, sizeof(float)*6);
+
+    /* More information for unbinding */
     po[p_start+j].mass = copies[h->p_start+j].mass;
     po[p_start+j].energy = copies[h->p_start+j].energy;
     po[p_start+j].type = copies[h->p_start+j].type;
-    if (potential_only) po[p_start + j].ke = -1;
-    if (h==base_h) po[p_start + j].flags = 1;
+
+    /* For major mergers. */
+    if (potential_only)
+      po[p_start + j].ke = -1;
+
+    /* Unsure of what this does. */
+    if (h==base_h)
+      po[p_start + j].flags = 1;
+
+    /* Unsure of what this does. */
     if (!potential_only && (h->num_p < base_h->num_p*0.03))
       po[p_start+j].flags = 2;
   }
@@ -856,15 +878,28 @@ void find_subs(struct fof *f) {
   cf.particles = copies;
   num_copies = f->num_p;
 
-  if (LIGHTCONE) lightcone_set_scale(f->particles->pos);
+  if (LIGHTCONE)
+    lightcone_set_scale(f->particles->pos);
 
+  /* Find the subhaloes in the current FoF group. */
   num_subfofs = 0;
   _find_subs(&cf, 0);
   num_subfofs = 0;
-  for (i=0; i<f->num_p; i++) copies[i] = p[copies[i].id];
+
+  for (i=0; i<f->num_p; i++) 
+    copies[i] = p[copies[i].id];
+
   calc_num_child_particles(h_start);
-  for (i=h_start; i<num_halos; i++) calc_basic_halo_props(halos + i);
-  for (i=h_start; i<num_halos; i++) calc_additional_halo_props(halos + i);
+
+  /* Basic properties that do not rely on knowing whether particles are bound
+   * or not. */
+  for (i=h_start; i<num_halos; i++) 
+    calc_basic_halo_props(halos + i);
+
+  /* Properties that may rely on whether particles are bound or not, depending
+   * on runtime parameter. */
+  for (i=h_start; i<num_halos; i++)
+    calc_additional_halo_props(halos + i);
 
   memcpy(f->particles, copies, sizeof(struct particle)*f->num_p);
   for (i=h_start; i<num_halos; i++)
