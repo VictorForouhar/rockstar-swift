@@ -393,7 +393,7 @@ char *gen_merger_catalog(int64_t snap, int64_t chunk, struct halo *halos, int64_
     char buffer[1024];
     snprintf(buffer, 1024, "%s/out_%s.list", OUTBASE, snapnames[snap]);
     output = check_fopen(buffer, "w");
-    hchars += fprintf(output, "#ID DescID M%s Vmax Vrms R%s Rs Np X Y Z VX VY VZ JX JY JZ Spin rs_klypin M%s_all M%s M%s M%s M%s Xoff Voff spin_bullock b_to_a c_to_a A[x] A[y] A[z] b_to_a(%s) c_to_a(%s) A[x](%s) A[y](%s) A[z](%s) T/|U| M_pe_Behroozi M_pe_Diemer Type SM Gas BH_Mass\n",
+    hchars += fprintf(output, "#ID DescID M%s Vmax Vrms R%s Rs Np X Y Z VX VY VZ JX JY JZ Spin rs_klypin M%s_all M%s M%s M%s M%s Xoff Voff spin_bullock b_to_a c_to_a A[x] A[y] A[z] b_to_a(%s) c_to_a(%s) A[x](%s) A[y](%s) A[z](%s) T/|U| M_pe_Behroozi M_pe_Diemer Type SM Gas BH_Mass BoundMass\n",
 		      MASS_DEFINITION, MASS_DEFINITION, MASS_DEFINITION, MASS_DEFINITION2, MASS_DEFINITION3, MASS_DEFINITION4, MASS_DEFINITION5, MASS_DEFINITION4, MASS_DEFINITION4, MASS_DEFINITION4, MASS_DEFINITION4, MASS_DEFINITION4);
     hchars += print_ascii_header_info(output, NULL, 0);
     fclose(output);
