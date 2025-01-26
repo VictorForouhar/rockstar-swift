@@ -969,7 +969,12 @@ void find_subs(struct fof *f) {
   num_subfofs = 0;
 
   for (i=0; i<f->num_p; i++) 
+  {
     copies[i] = p[copies[i].id];
+
+    /* Initialise the value to not be bound to anything. */
+    copies[i].IsBound = false;
+  }
 
   calc_num_child_particles(h_start);
 

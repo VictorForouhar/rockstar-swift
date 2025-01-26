@@ -1,6 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 #include <stdint.h>
+#include <stdbool.h>
 
 #define RTYPE_DM   0
 #define RTYPE_GAS  1
@@ -15,6 +16,7 @@ struct particle {
   float energy; /* Energy per unit mass */
   float softening; /* Per-particle softening, not currently used. */
   float metallicity; /* Not currently used. */
+  bool IsBound; /* To flag whether the potential is greater than the kinetic energy */
   int32_t type;
 };
 
