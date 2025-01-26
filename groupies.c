@@ -194,7 +194,7 @@ void _reset_potentials(struct halo *base_h, struct halo *h, float *cen, int64_t 
 
 /* My version of _reset_potentials, which only adds to po the particles
  * of the current subhalo, plus the UNBOUND particles of the children. */
-void _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
+int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
   int64_t j, k;
   float dx, r2;
 
@@ -252,6 +252,8 @@ void _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *cen
   /* Sanity check, we should have added at most the number of particles in the
    * subhalo. */
    assert(po_index <= h->num_p);
+
+   return po_index;
 }
 
 int64_t calc_particle_radii(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
@@ -273,14 +275,17 @@ int64_t calc_particle_radii(struct halo *base_h, struct halo *h, float *cen, int
   if(strcasecmp(INCLUSIVE_OR_EXCLUSIVE_MASS, "INCLUSIVE")) 
   {
     _reset_potentials(base_h, h, cen, p_start, level, potential_only);
+
+    /* We always add all the particles of the current subhalo. */
+    total_p += h->num_p;
   }
   else
   {
-    _reset_potentials_exclusive(base_h, h, cen, p_start, level, potential_only);
+    /* We only add the particles not bound to a subhalo. */
+    total_p += _reset_potentials_exclusive(base_h, h, cen, p_start, level, potential_only);  
   }
 
   first_child = child = extra_info[h-halos].child;
-  total_p += h->num_p;
   while (child > -1) {
     total_p = calc_particle_radii(base_h, halos + child,
                                   cen, total_p, level+1, potential_only);
