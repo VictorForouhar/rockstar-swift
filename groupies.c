@@ -195,11 +195,19 @@ void _reset_potentials(struct halo *base_h, struct halo *h, float *cen, int64_t 
 int64_t calc_particle_radii(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
   int64_t j, total_p = p_start, child, first_child, parent;
 
-  //Break accidental graph loops
-  if (level >= num_alloced_halo_ids) add_more_halo_ids();
-  halo_ids[level] = h-halos;
-  for (j=0; j<level; j++) if (halo_ids[j] == halo_ids[level]) return p_start;
+  /* Break accidental graph loops */
+  if (level >= num_alloced_halo_ids) 
+    add_more_halo_ids();
 
+  halo_ids[level] = h-halos;
+  
+  for (j=0; j<level; j++) 
+    if (halo_ids[j] == halo_ids[level]) 
+      return p_start;
+
+  /* This is where particles of subhalos are added to po. Hence, which function
+   * we call depends on whether we are using exclusive of inclusive mass
+   * definitions. */
   _reset_potentials(base_h, h, cen, p_start, level, potential_only);
 
   first_child = child = extra_info[h-halos].child;
