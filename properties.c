@@ -624,3 +624,9 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
   if (analyze_halo_generic != NULL) 
     analyze_halo_generic(h, po, total_p);
 }
+
+/* This function will iterate over all children of the current halo. If all 
+ * children have been analysed, the halo is flagged as analysable*/
+void identify_subhalos_to_analyse(struct halo *h)
+{
+}
