@@ -553,3 +553,74 @@ void calc_additional_halo_props(struct halo *h) {
   if (analyze_halo_generic != NULL) 
     analyze_halo_generic(h, po, total_p);
 }
+
+/* This is my implementation to enable exclusive mass calculation of subhalo
+ * properties. */
+void calc_additional_halo_props_exclusive_mass(struct halo *h){
+  int64_t j, total_p;
+  double dens_thresh;
+
+  if (LIGHTCONE) 
+    lightcone_set_scale(h->pos);
+
+  dens_thresh = particle_thresh_dens[0]*(4.0*M_PI/3.0);
+
+  if (h->num_p < 1) 
+    return;
+
+  /* This function call fills the po array with particles of the current halo,
+   * and all of its children. If it is a major merger, it also includes the 
+   * parent particles. */
+  total_p = calc_particle_radii(h, h, h->pos, 0, 0, 0);
+
+  /* This loop removes all particles that are beyond the radius enclosing a
+   * certain density threshold. */
+  if(h->num_p)
+  {
+    if (BOUND_OUT_TO_HALO_EDGE) 
+    {
+      qsort(po, total_p, sizeof(struct potential), dist_compare);
+
+      for (j=total_p-1; j>=0; j--)
+        if (j*j / (po[j].r2*po[j].r2*po[j].r2) > dens_thresh*dens_thresh) 
+          break;
+
+      if (total_p) 
+        total_p = j+1;
+    }
+  }
+
+  /* Compute potential of all particles in po. */
+  if (total_p>1) 
+    compute_potential(po, total_p);
+
+  /* This loop will only do something if we have a major merger, as its
+   * particles are used to compute potentials but are removed so that they
+   * do not enter in kinetic energy calculations. */
+  for (j=0; j<total_p; j++)
+  {
+    if (po[j].ke < 0)
+    {
+      total_p--;
+      po[j] = po[total_p];
+      j--;
+    }
+  }
+
+  /* NOTE: As we sort here, we lose the original ordering alignment with the 
+   * halo we are analysing. */
+  qsort(po, total_p, sizeof(struct potential), dist_compare);
+  calculate_corevel(h, po, total_p);
+  if (extra_info[h-halos].sub_of > -1)
+    compute_kinetic_energy(po, total_p, h->corevel, h->pos);
+  else
+    compute_kinetic_energy(po, total_p, h->bulkvel, h->pos);
+
+  /* A value of 1 indicates that properties should be computed only using bound
+   * particles. */
+  _calc_additional_halo_props(h, total_p, 0);
+  _calc_additional_halo_props(h, total_p, 1);
+
+  if (analyze_halo_generic != NULL) 
+    analyze_halo_generic(h, po, total_p);
+}
