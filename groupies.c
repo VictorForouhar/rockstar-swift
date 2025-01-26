@@ -881,7 +881,7 @@ void find_subs(struct fof *f) {
   if (LIGHTCONE)
     lightcone_set_scale(f->particles->pos);
 
-  /* Find the subhaloes in the current FoF group. */
+  /* Find the subhalos in the current FoF group. */
   num_subfofs = 0;
   _find_subs(&cf, 0);
   num_subfofs = 0;
