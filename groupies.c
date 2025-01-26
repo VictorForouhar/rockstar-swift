@@ -919,16 +919,21 @@ void find_subs(struct fof *f) {
     while(halos_to_analyse > 0)
     {
       /* Identify which subhalos can be analysed in the current iteration,
-      * which are all of the subhalos whose children have been subject
-      * to unbinding (or have no children). */
+       * which are all of the subhalos whose children have been subject
+       * to unbinding (or have no children). */
+      // NOTE: I am assuming that h_start does not correspond to the central 
+      // subhalo, as the calc_num_child_particles function also iterates over
+      // subhaloes.
       for (i=h_start; i<num_halos; i++)
         identify_subhalos_to_analyse(halos + i);
 
       /* Iterate over all subhalos in the halo and analyse those that can be
-       * analysed. */
+       * analysed and have not done so yet. */
       for (i=h_start; i<num_halos; i++)
       {
-        if((halos+i)->HasBeenAnalysed == false && (halos+i)->CanBeAnalysed == true)
+        
+        if(((halos+i)->HasBeenAnalysed == false) && \
+           ((halos+i)->CanBeAnalysed   == true))
         {
           calc_additional_halo_props_exclusive_mass(halos + i);
 
