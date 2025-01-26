@@ -626,7 +626,39 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
 }
 
 /* This function will iterate over all children of the current halo. If all 
- * children have been analysed, the halo is flagged as analysable*/
+ * children have been analysed, the halo is flagged as analysable. I have taken
+ * inspiration from the calc_num_child_particles. */
 void identify_subhalos_to_analyse(struct halo *h)
 {
+  /* We initialise the value to true, but it will change in the while loop if
+   * we encounter at least one child subhalo that has not been analysed. */
+  h->CanBeAnalysed = true;
+
+  /* Get the first child subhalo for the current subhalo. */
+  int64_t first_child = extra_info[h-halos].child;
+  int64_t child       = extra_info[h-halos].child;
+
+  /* If there are no children, we can always analyse the current subhalo */  
+  if (first_child == -1)
+    return;
+
+  /* If we have children, we check whether all of them have already been 
+   * analysed. During this loop we also recursively iterate over all the 
+   * children to set their CanBeAnalysed value.  */
+  while (child > -1) 
+  {
+    /* We cannot analyse the current subhalo, since one of the children has not
+     * yet been analysed. */
+    if(!(halos+child)->HasBeenAnalysed)
+      h->CanBeAnalysed = false;
+
+    /* We recurse deeper to set the CanBeAnalysed flag for the children of the
+     * current child. */
+    identify_subhalos_to_analyse(halos + child);
+
+    /* Go to the next child of the current subhalo. */
+    child = extra_info[child].next_cochild;
+
+    assert(child != first_child);
+  }
 }
