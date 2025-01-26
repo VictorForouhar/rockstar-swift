@@ -4,6 +4,7 @@
 #define HALO_FORMAT_REVISION 1
 
 #include <stdint.h>
+#include <stdbool.h>
 
 struct halo {
   int64_t id;
@@ -17,6 +18,7 @@ struct halo {
 
   int32_t type;
   float sm, gas, bh, peak_density, av_density;
+  bool HasBeenAnalysed, CanBeAnalysed;
   //float half_sm_radius, sm_vrms 
 };
 

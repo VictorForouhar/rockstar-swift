@@ -898,8 +898,48 @@ void find_subs(struct fof *f) {
 
   /* Properties that may rely on whether particles are bound or not, depending
    * on runtime parameter. */
-  for (i=h_start; i<num_halos; i++)
-    calc_additional_halo_props(halos + i);
+  if(strcasecmp(INCLUSIVE_OR_EXCLUSIVE_MASS, "INCLUSIVE")) 
+  {
+    /* ROCKSTAR's default mass definition. */
+    for (i=h_start; i<num_halos; i++)
+      calc_additional_halo_props(halos + i);
+  }
+  else
+  {
+    /* To assign masses exclusively, we require an alternative approach. We 
+     * iterate over subhalos in the group, and only analyse those whose 
+     * children have already been analysed (or have no children). This requirement
+     * is needed to pass particles that belong to a child (but are unbound) to 
+     * its parent. Unfortunately, this means we require several passes until we 
+     * have analysed all subhalo candidates. */
+
+    /* By the time we are done, we should have analysed all of the subgroups. */
+    int64_t halos_to_analyse = num_halos - h_start; 
+
+    while(halos_to_analyse > 0)
+    {
+      /* Identify which subhalos can be analysed in the current iteration,
+      * which are all of the subhalos whose children have been subject
+      * to unbinding (or have no children). */
+      for (i=h_start; i<num_halos; i++)
+        identify_subhalos_to_analyse(halos + i);
+
+      /* Iterate over all subhalos in the halo and analyse those that can be
+       * analysed. */
+      for (i=h_start; i<num_halos; i++)
+      {
+        if((halos+i)->HasBeenAnalysed == false && (halos+i)->CanBeAnalysed == true)
+        {
+          calc_additional_halo_props_exclusive_mass(halos + i);
+
+          /* Flag as analysed and remove one halo from the pool of halos to
+           * analyse. */
+          (halos+i)->HasBeenAnalysed = true;
+          halos_to_analyse--;
+        }
+      }
+    }
+  }
 
   memcpy(f->particles, copies, sizeof(struct particle)*f->num_p);
   for (i=h_start; i<num_halos; i++)
