@@ -268,7 +268,7 @@ int64_t calc_particle_radii(struct halo *base_h, struct halo *h, float *cen, int
       return p_start;
 
   /* This is where particles of subhalos are added to po. Hence, which function
-   * we call depends on whether we are using exclusive of inclusive mass
+   * we call depends on whether we are using exclusive or inclusive mass
    * definitions. */
   if(strcasecmp(INCLUSIVE_OR_EXCLUSIVE_MASS, "INCLUSIVE")) 
   {
