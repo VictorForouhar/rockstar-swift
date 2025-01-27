@@ -212,6 +212,8 @@ int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *
   {
     /* This is where we differ from inclusive definition: we only add the 
      * particle if it is not bound to another subhalo already. */
+    // NOTE: If we are the particles of a parent during a major merger, this 
+    // condition will always be false since the parent has not been analysed yet.
     if(copies[h->p_start+j].IsBound)
       continue;
 
