@@ -381,8 +381,17 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
   double cur_dens, rvir, mvir;
   double total_mass = 0, sm=0, gas=0, bh=0;
 
-  for (j=0; j<total_p; j++) {
-    if (bound && (po[j].pe < po[j].ke)) continue;
+  for (j=0; j<total_p; j++)
+  {
+    /* Particle is unbound and should not be included in bound-only properties. */
+    if (bound && (po[j].pe < po[j].ke)) 
+      continue;
+
+    /* If we got here and are doing bound only properties, the particle is 
+     * bound to the current subhalo. Update the IsBound boolean in *copies,
+     * making the particle be exclusively assigned to the current subhalo. */
+    copies[po[j].index_in_copies].IsBound = true;
+
     num_part++;
     total_mass += po[j].mass;
     r = sqrt(po[j].r2);

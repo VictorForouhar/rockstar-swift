@@ -220,6 +220,11 @@ int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *
     if(copies[h->p_start+j].IsBound)
       continue;
 
+    /* Store the index correspondence between the particle in *po and *copies. 
+     * We will use this information within _calc_additional_halo_props, when 
+     * we actually check if particles are bound or not. */
+    po[po_start+po_index].index_in_copies = h->p_start+j;
+
     r2 = 0;
     for (k=0; k<3; k++) 
     {

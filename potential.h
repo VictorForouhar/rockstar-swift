@@ -9,6 +9,7 @@ struct potential {
   double pe;
   float ke;
   int32_t flags, type;
+  int64_t index_in_copies;
 
 /*The following fields are not included for the main halo finder. */
 #ifdef POTENTIAL_COMPARISON
