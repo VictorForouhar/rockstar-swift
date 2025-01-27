@@ -309,7 +309,7 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
       return p_start;
 
   /* This is where particles of subhalos are added to po. As we are using an 
-   * exclusive mass definition, we only use partilcles that are not already 
+   * exclusive mass definition, we only use particles that are not already 
    * bound to the subhalo. */
   total_p += _reset_potentials_exclusive(base_h, h, cen, p_start, level, potential_only);  
 
