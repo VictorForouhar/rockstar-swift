@@ -571,7 +571,7 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
   /* This function call fills the po array with particles of the current halo,
    * and all of its children. If it is a major merger, it also includes the 
    * parent particles. */
-  total_p = calc_particle_radii(h, h, h->pos, 0, 0, 0);
+  total_p = calc_particle_radii_exclusive(h, h, h->pos, 0, 0, 0);
 
   /* This loop removes all particles that are beyond the radius enclosing a
    * certain density threshold. */
