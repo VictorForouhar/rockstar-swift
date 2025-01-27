@@ -573,7 +573,7 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
    * parent particles. */
   // NOTE: we use total_po instead of total_p to make it explicit that it 
   // corresponds to the total number of particles in po.
-  total_po = calc_particle_radii_exclusive(h, h, h->pos, 0, 0, 0);
+  total_po = calc_particle_radii_exclusive(h, h, h->pos, 0, 0, 0, 0);
 
   /* This loop removes all particles that are beyond the radius enclosing a
    * certain density threshold. */

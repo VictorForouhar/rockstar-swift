@@ -328,7 +328,7 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
   /* Add the unbound particles of the children */
   first_child = child = extra_info[h-halos].child;
   while (child > -1) {
-    total_p = calc_particle_radii_exclusive(base_h, halos + child,
+    total_po = calc_particle_radii_exclusive(base_h, halos + child,
                                   cen, total_p, total_po, level+1, potential_only);
 
     child = extra_info[child].next_cochild;
@@ -340,10 +340,10 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
   parent = extra_info[h-halos].sub_of;
   if ((h == base_h) && (parent > -1) &&
     (halos[parent].num_child_particles*INCLUDE_HOST_POTENTIAL_RATIO < h->num_child_particles)){
-    total_p = calc_particle_radii_exclusive(base_h, halos + parent,
+    total_po = calc_particle_radii_exclusive(base_h, halos + parent,
                                   cen, total_p, total_po, level + 1, 1);
   }
-  return total_p;
+  return total_po;
 }
 
 #include "properties.c"
