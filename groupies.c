@@ -295,10 +295,14 @@ int64_t calc_particle_radii(struct halo *base_h, struct halo *h, float *cen, int
 }
 
 int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float *cen, 
-                                      int64_t p_start, int64_t level, int64_t potential_only) 
+                                      int64_t p_start, int64_t po_start, int64_t level,
+                                      int64_t potential_only)
 {
+  int64_t j, child, first_child, parent;
 
-  int64_t j, total_p = p_start, child, first_child, parent;
+  /* Counters to keep track of indicies in *po and *copies arrays */
+  int64_t total_po = po_start;
+  int64_t total_p  = p_start;
 
   /* Break accidental graph loops */
   if (level >= num_alloced_halo_ids) 
@@ -314,11 +318,19 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
    * exclusive mass definition, we only use particles that are not already 
    * bound to the subhalo. */
 
+  // NOTE: We increase two counters. The first reflects the start point of po 
+  // hence the number of particles that were added to po. The second counter 
+  // is used to access *copies, so it is based on total number of particles 
+  // the haloes have.
+  total_po += _reset_potentials_exclusive(base_h, h, cen, p_start, po_start, level, potential_only);  
+  total_p  += h->num_p;
+
   /* Add the unbound particles of the children */
   first_child = child = extra_info[h-halos].child;
   while (child > -1) {
     total_p = calc_particle_radii_exclusive(base_h, halos + child,
-                                  cen, total_p, level+1, potential_only);
+                                  cen, total_p, total_po, level+1, potential_only);
+
     child = extra_info[child].next_cochild;
     assert(child != first_child);
   }
@@ -329,7 +341,7 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
   if ((h == base_h) && (parent > -1) &&
     (halos[parent].num_child_particles*INCLUDE_HOST_POTENTIAL_RATIO < h->num_child_particles)){
     total_p = calc_particle_radii_exclusive(base_h, halos + parent,
-                                  cen, total_p, level+1, 1);
+                                  cen, total_p, total_po, level + 1, 1);
   }
   return total_p;
 }
