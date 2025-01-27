@@ -201,7 +201,8 @@ int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *
 
   /* NOTE: In principle, we should only reset the number of particles that belong 
    * to h but that are unbound. However, I do not think reseting more particles 
-   * will cause a problem, as long as we use the correct p_start value. */
+   * than we need will cause a problem, as long as we use the correct p_start
+   * value. */
   memset(po + p_start, 0, sizeof(struct potential)*h->num_p);
 
   /* We need another index to account for the fact that not all particles will
@@ -215,6 +216,7 @@ int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *
      * particle if it is not bound to another subhalo already. */
     // NOTE: If we are the particles of a parent during a major merger, this 
     // condition will always be false since the parent has not been analysed yet.
+    // This is the same behaviour as default ROCKSTAR.
     if(copies[h->p_start+j].IsBound)
       continue;
 
@@ -303,7 +305,7 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
     add_more_halo_ids();
 
   halo_ids[level] = h-halos;
-  
+
   for (j=0; j<level; j++) 
     if (halo_ids[j] == halo_ids[level]) 
       return p_start;
@@ -311,8 +313,8 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
   /* This is where particles of subhalos are added to po. As we are using an 
    * exclusive mass definition, we only use particles that are not already 
    * bound to the subhalo. */
-  total_p += _reset_potentials_exclusive(base_h, h, cen, p_start, level, potential_only);  
 
+  /* Add the unbound particles of the children */
   first_child = child = extra_info[h-halos].child;
   while (child > -1) {
     total_p = calc_particle_radii_exclusive(base_h, halos + child,
@@ -321,6 +323,8 @@ int64_t calc_particle_radii_exclusive(struct halo *base_h, struct halo *h, float
     assert(child != first_child);
   }
 
+  /* For major mergers, add the particles of the parent subhalo of the original
+   * subhalo. */
   parent = extra_info[h-halos].sub_of;
   if ((h == base_h) && (parent > -1) &&
     (halos[parent].num_child_particles*INCLUDE_HOST_POTENTIAL_RATIO < h->num_child_particles)){
