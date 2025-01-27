@@ -557,7 +557,7 @@ void calc_additional_halo_props(struct halo *h) {
 /* This is my implementation to enable exclusive mass calculation of subhalo
  * properties. */
 void calc_additional_halo_props_exclusive_mass(struct halo *h){
-  int64_t j, total_p;
+  int64_t j, total_po;
   double dens_thresh;
 
   if (LIGHTCONE) 
@@ -571,7 +571,9 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
   /* This function call fills the po array with particles of the current halo,
    * and all of its children. If it is a major merger, it also includes the 
    * parent particles. */
-  total_p = calc_particle_radii_exclusive(h, h, h->pos, 0, 0, 0);
+  // NOTE: we use total_po instead of total_p to make it explicit that it 
+  // corresponds to the total number of particles in po.
+  total_po = calc_particle_radii_exclusive(h, h, h->pos, 0, 0, 0);
 
   /* This loop removes all particles that are beyond the radius enclosing a
    * certain density threshold. */
@@ -579,50 +581,50 @@ void calc_additional_halo_props_exclusive_mass(struct halo *h){
   {
     if (BOUND_OUT_TO_HALO_EDGE) 
     {
-      qsort(po, total_p, sizeof(struct potential), dist_compare);
+      qsort(po, total_po, sizeof(struct potential), dist_compare);
 
-      for (j=total_p-1; j>=0; j--)
+      for (j=total_po-1; j>=0; j--)
         if (j*j / (po[j].r2*po[j].r2*po[j].r2) > dens_thresh*dens_thresh) 
           break;
 
-      if (total_p) 
-        total_p = j+1;
+      if (total_po) 
+        total_po = j+1;
     }
   }
 
   /* Compute potential of all particles in po. */
-  if (total_p>1) 
-    compute_potential(po, total_p);
+  if (total_po>1) 
+    compute_potential(po, total_po);
 
   /* This loop will only do something if we have a major merger, as its
    * particles are used to compute potentials but are removed so that they
    * do not enter in kinetic energy calculations. */
-  for (j=0; j<total_p; j++)
+  for (j=0; j<total_po; j++)
   {
     if (po[j].ke < 0)
     {
-      total_p--;
-      po[j] = po[total_p];
+      total_po--;
+      po[j] = po[total_po];
       j--;
     }
   }
 
   /* NOTE: As we sort here, we lose the original ordering alignment with the 
    * halo we are analysing. */
-  qsort(po, total_p, sizeof(struct potential), dist_compare);
-  calculate_corevel(h, po, total_p);
+  qsort(po, total_po, sizeof(struct potential), dist_compare);
+  calculate_corevel(h, po, total_po);
   if (extra_info[h-halos].sub_of > -1)
-    compute_kinetic_energy(po, total_p, h->corevel, h->pos);
+    compute_kinetic_energy(po, total_po, h->corevel, h->pos);
   else
-    compute_kinetic_energy(po, total_p, h->bulkvel, h->pos);
+    compute_kinetic_energy(po, total_po, h->bulkvel, h->pos);
 
   /* A value of 1 indicates that properties should be computed only using bound
    * particles. */
-  _calc_additional_halo_props(h, total_p, 0);
-  _calc_additional_halo_props(h, total_p, 1);
+  _calc_additional_halo_props(h, total_po, 0);
+  _calc_additional_halo_props(h, total_po, 1);
 
   if (analyze_halo_generic != NULL) 
-    analyze_halo_generic(h, po, total_p);
+    analyze_halo_generic(h, po, total_po);
 }
 
 /* This function will iterate over all children of the current halo. If all 
