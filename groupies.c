@@ -194,7 +194,8 @@ void _reset_potentials(struct halo *base_h, struct halo *h, float *cen, int64_t 
 
 /* My version of _reset_potentials, which only adds to po the particles
  * of the current subhalo, plus the UNBOUND particles of the children. */
-int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *cen, int64_t p_start, int64_t level, int64_t potential_only) {
+int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *cen, 
+                                    int64_t p_start, int64_t po_start, int64_t level, int64_t potential_only) {
   int64_t j, k;
   float dx, r2;
 
@@ -225,27 +226,27 @@ int64_t _reset_potentials_exclusive(struct halo *base_h, struct halo *h, float *
     }
 
     /* Squared distance to the centre of the current halo. */
-    po[p_start+po_index].r2 = r2;
+    po[po_start+po_index].r2 = r2;
 
     /* 3D cartesian positions*/
-    memcpy(po[p_start+po_index].pos, copies[h->p_start+j].pos, sizeof(float)*6);
+    memcpy(po[po_start+po_index].pos, copies[h->p_start+j].pos, sizeof(float)*6);
 
     /* More information for unbinding */
-    po[p_start+po_index].mass   = copies[h->p_start+j].mass;
-    po[p_start+po_index].energy = copies[h->p_start+j].energy;
-    po[p_start+po_index].type   = copies[h->p_start+j].type;
+    po[po_start+po_index].mass   = copies[h->p_start+j].mass;
+    po[po_start+po_index].energy = copies[h->p_start+j].energy;
+    po[po_start+po_index].type   = copies[h->p_start+j].type;
 
     /* For major mergers. */
     if (potential_only)
-      po[p_start+po_index].ke = -1;
+      po[po_start+po_index].ke = -1;
 
     /* Unsure of what this does. */
     if (h==base_h)
-      po[p_start+po_index].flags = 1;
+      po[po_start+po_index].flags = 1;
 
     /* Unsure of what this does. */
     if (!potential_only && (h->num_p < base_h->num_p*0.03))
-      po[p_start+po_index].flags = 2;
+      po[po_start+po_index].flags = 2;
 
     /* Increment po_index to not overwrite data. */
     po_index++;
