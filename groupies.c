@@ -1034,7 +1034,7 @@ void find_subs(struct fof *f) {
 
   /* Properties that may rely on whether particles are bound or not, depending
    * on runtime parameter. */
-  if(strcasecmp(INCLUSIVE_OR_EXCLUSIVE_MASS, "INCLUSIVE")) 
+  if(!strcasecmp(INCLUSIVE_OR_EXCLUSIVE_MASS, "INCLUSIVE"))
   {
     /* ROCKSTAR's default mass definition. */
     for (i=h_start; i<num_halos; i++)
