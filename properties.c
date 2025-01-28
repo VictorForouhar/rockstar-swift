@@ -390,7 +390,8 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
     /* If we got here and are doing bound only properties, the particle is 
      * bound to the current subhalo. Update the IsBound boolean in *copies,
      * making the particle be exclusively assigned to the current subhalo. */
-    copies[po[j].index_in_copies].IsBound = true;
+    if (bound)
+      copies[po[j].index_in_copies].IsBound = true;
 
     num_part++;
     total_mass += po[j].mass;
