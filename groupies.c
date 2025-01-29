@@ -1059,7 +1059,7 @@ void find_subs(struct fof *f) {
        * to unbinding (or have no children). */
       // NOTE: I am assuming that h_start does not correspond to the central 
       // subhalo, as the calc_num_child_particles function also iterates over
-      // subhaloes.
+      // subhalos.
       for (i=h_start; i<num_halos; i++)
         identify_subhalos_to_analyse(halos + i);
 

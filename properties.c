@@ -425,7 +425,7 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
     }
   }
 
-  /* After the above loop, the total mass equals the total bound mass. Store.*/
+  /* After the above loop, the total mass equals the total bound mass. Store. */
   if(bound)
     h->bound_mass = total_mass;
 
@@ -493,13 +493,13 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
     _calc_pseudo_evolution_masses(h,total_p,bound);
   }
 
-  /* To correct for the fact that we have reserved particles for subhaloes that 
+  /* To correct for the fact that we have reserved particles for subhalos that 
    * we might not save in the catalogues, reset their IsBound flag. Otherwise 
-   * mass is assigned to subhaloes that do not exist in the catalogues. We do 
+   * mass is assigned to subhalos that do not exist in the catalogues. We do 
    * this here since we need mgrav to be computed first. */
   if(bound)
   {
-    /* The conditions are directly taken from _should_print.*/
+    /* The conditions are directly taken from _should_print. */
     if ((h->num_p < MIN_HALO_OUTPUT_SIZE) ||
         (h->m * UNBOUND_THRESHOLD >= h->mgrav) ||
         ((h->mgrav < 1.5*PARTICLE_MASS) && UNBOUND_THRESHOLD > 0) ||
