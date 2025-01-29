@@ -492,6 +492,23 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
     h->bullock_spin = (m>0) ? (Jh / (mvir*sqrt(2.0*Gc*mvir*rvir*SCALE_NOW/1e3))) : 0;
     _calc_pseudo_evolution_masses(h,total_p,bound);
   }
+
+  /* To correct for the fact that we have reserved particles for subhaloes that 
+   * we might not save in the catalogues, reset their IsBound flag. Otherwise 
+   * mass is assigned to subhaloes that do not exist in the catalogues. We do 
+   * this here since we need mgrav to be computed first. */
+  if(bound)
+  {
+    /* The conditions are directly taken from _should_print.*/
+    if ((h->num_p < MIN_HALO_OUTPUT_SIZE) ||
+        (h->m * UNBOUND_THRESHOLD >= h->mgrav) ||
+        ((h->mgrav < 1.5*PARTICLE_MASS) && UNBOUND_THRESHOLD > 0) ||
+        ((MIN_HALO_OUTPUT_MASS>0) && (h->mgrav < MIN_HALO_OUTPUT_MASS)))
+      /* We may iterate without checking bound condition since all particles will
+       * be unbound by definition. */
+      for (j=0; j<total_p; j++) 
+        copies[po[j].index_in_copies].IsBound = false;
+  }
 }
 
 //Assumes center + velocity already calculated.
