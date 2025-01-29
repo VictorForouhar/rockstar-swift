@@ -12,7 +12,7 @@ module purge
 module load intel_comp/2024.2.0 compiler-rt tbb compiler mpi
 module load hdf5
 
-outbase="/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar"
+outbase="/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar_exclusive"
 
 mkdir -p $outbase
 if [ -f "${outbase}/auto-rockstar.cfg" ]; then

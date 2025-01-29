@@ -1,6 +1,6 @@
 find_parents=../../../../util/find_parents
 
-outbase=/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar/
+outbase=/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N0900/HYDRO_FIDUCIAL/Rockstar_exclusive/
 box_size=681
 
 for snapshot in $(cat ../snapshot_names.txt); do
