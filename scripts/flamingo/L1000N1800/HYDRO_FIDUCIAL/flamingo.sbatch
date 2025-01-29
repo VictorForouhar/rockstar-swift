@@ -9,8 +9,7 @@
 #SBATCH -t 02:00:00
 
 module purge
-module load intel_comp/2024.2.0 compiler-rt tbb compiler mpi
-module load hdf5
+module load gnu_comp/13.1.0 hdf5/1.12.2 openmpi/4.1.4
 
 outbase="/snap8/scratch/dp004/dc-foro1/halo_comparison/L1000N1800/HYDRO_FIDUCIAL/Rockstar_exclusive"
 
