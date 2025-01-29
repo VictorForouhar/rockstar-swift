@@ -32,9 +32,8 @@ until [ -f "${outbase}/auto-rockstar.cfg" ]; do
     sleep 5
 done
 
-# Launch writer processes
-# Reader processes will be spawned automatically
-mpirun -np $SLURM_NTASKS $ROCKSTAR_EXE -c "${outbase}/auto-rockstar.cfg"
+# Launch writer processes. Reader processes will be spawned automatically
+mpirun -np $SLURM_NTASKS --mca btl ^openib $ROCKSTAR_EXE -c "${outbase}/auto-rockstar.cfg"
 
 wait
 
