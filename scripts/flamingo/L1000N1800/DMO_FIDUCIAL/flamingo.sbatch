@@ -37,3 +37,5 @@ done
 mpirun -np $SLURM_NTASKS $ROCKSTAR_EXE -c "${outbase}/auto-rockstar.cfg"
 
 wait
+
+bash create_parents.sh
