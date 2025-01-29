@@ -389,7 +389,10 @@ void _calc_additional_halo_props(struct halo *h, int64_t total_p, int64_t bound)
 
     /* If we got here and are doing bound only properties, the particle is 
      * bound to the current subhalo. Update the IsBound boolean in *copies,
-     * making the particle be exclusively assigned to the current subhalo. */
+     * making the particle be exclusively assigned to the current subhalo. 
+     * NOTE: we do not check INCLUSIVE_OR_EXCLUSIVE_MASS since using an 
+     * inclusive mass definition means that the value IsBound never plays a role  
+     * in adding particles to *po. */
     if (bound)
       copies[po[j].index_in_copies].IsBound = true;
 
